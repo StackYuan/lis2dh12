@@ -8,7 +8,7 @@
  * 2021-02-04     stackryan      first version
  */
 
-#include "sensor_st_lis2dh12.h"
+#include "st_lis2dh12_sensor_v1.h"
 
 #define DBG_ENABLE
 #define DBG_LEVEL DBG_LOG
@@ -16,7 +16,6 @@
 #define DBG_COLOR
 #include <rtdbg.h>
 
-#define PKG_USING_LIS2DH12_ACCE
 #define SENSOR_ACC_RANGE_2G   2000
 #define SENSOR_ACC_RANGE_4G   4000
 #define SENSOR_ACC_RANGE_8G   8000
@@ -24,8 +23,6 @@
 
 #include "lis2dh12_reg.h"
 #include "board.h"
-#include "drv_spi.h"
-#include "drv_gpio.h"
 
 static uint8_t whoamI = 0x00;
 static struct rt_spi_device *spi_dev_acce;
@@ -41,7 +38,7 @@ static int32_t get_tick(void)
     return rt_tick_get();
 }
 
-static int rt_spi_write_reg(uint16_t address, uint16_t reg, uint8_t *data, uint16_t len)
+static int32_t rt_spi_write_reg(uint16_t address, uint16_t reg, uint8_t *data, uint16_t len)
 {
     uint8_t addr = reg | 0x40;
     struct rt_spi_message msgs[2];
@@ -68,7 +65,7 @@ static int rt_spi_write_reg(uint16_t address, uint16_t reg, uint8_t *data, uint1
     return RT_EOK;
 }
 
-static int rt_spi_read_reg(uint16_t address, uint16_t reg, uint8_t *data, uint16_t len)
+static int32_t rt_spi_read_reg(uint16_t address, uint16_t reg, uint8_t *data, uint16_t len)
 {
     // rt_uint8_t tmp = reg;
     uint8_t addr = reg | 0xC0;
@@ -269,7 +266,7 @@ static rt_size_t _lis2dh12_get_id(void *args)
     return RT_EOK;
 }
 
-static rt_size_t lis2dh12_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
+static RT_SIZE_TYPE lis2dh12_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
 {
     RT_ASSERT(buf);
 

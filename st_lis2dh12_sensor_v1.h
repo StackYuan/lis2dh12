@@ -11,8 +11,18 @@
 #ifndef SENSOR_ST_LIS2DH12_H__
 #define SENSOR_ST_LIS2DH12_H__
 
-#include "sensor.h"
 #include "lis2dh12.h"
+
+#include <rtthread.h>
+#include <rtdevice.h>
+
+#if defined(RT_VERSION_CHECK)
+    #if (RTTHREAD_VERSION >= RT_VERSION_CHECK(5, 0, 2))
+        #define RT_SIZE_TYPE   rt_ssize_t
+    #else
+        #define RT_SIZE_TYPE   rt_size_t
+    #endif
+#endif
 
 int rt_hw_lis2dh12_init(const char *name, struct rt_sensor_config *cfg);
 
